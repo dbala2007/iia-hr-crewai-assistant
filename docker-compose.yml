@@ -1,6 +1,8 @@
 services:
   iiahrcrew_app:
-    image: registry.gitlab.com/your-gitlab-username/crewai_streamlit_app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: iiahrcrew_container
     restart: always
     ports:
@@ -10,16 +12,20 @@ services:
     volumes:
       - ./google_credentials.json:/app/google_credentials.json
     networks:
-      - traefik-net
+      - internal_net
+      - traefik_net
     labels:
       - "traefik.enable=true"
       # Router Configuration
       - "traefik.http.routers.iiahrcrew.rule=Host(`iiahrcrew.aiwithbala.in`)"
       - "traefik.http.routers.iiahrcrew.entrypoints=websecure"
-      - "traefik.http.routers.iiahrcrew.tls.certresolver=myresolver"
+      - "traefik.http.routers.iiahrcrew.tls.certresolver=letsencrypt"
       # Service Configuration (Routing to Port 8502)
       - "traefik.http.services.iiahrcrew.loadbalancer.server.port=8502"
 
 networks:
-  traefik-net:
+  internal_net:
+    driver: bridge
+  traefik_net:
     external: true
+    name: n8n-pkrc_default
