@@ -1,0 +1,7 @@
+crewai
+crewai-tools
+streamlit
+gspread
+oauth2client
+pypdf
+python-dotenv

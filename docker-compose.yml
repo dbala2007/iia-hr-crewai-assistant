@@ -1,0 +1,25 @@
+services:
+  iiahrcrew_app:
+    image: registry.gitlab.com/your-gitlab-username/crewai_streamlit_app:latest
+    container_name: iiahrcrew_container
+    restart: always
+    ports:
+      - "8502:8502"
+    env_file:
+      - .env
+    volumes:
+      - ./google_credentials.json:/app/google_credentials.json
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      # Router Configuration
+      - "traefik.http.routers.iiahrcrew.rule=Host(`iiahrcrew.aiwithbala.in`)"
+      - "traefik.http.routers.iiahrcrew.entrypoints=websecure"
+      - "traefik.http.routers.iiahrcrew.tls.certresolver=myresolver"
+      # Service Configuration (Routing to Port 8502)
+      - "traefik.http.services.iiahrcrew.loadbalancer.server.port=8502"
+
+networks:
+  traefik-net:
+    external: true

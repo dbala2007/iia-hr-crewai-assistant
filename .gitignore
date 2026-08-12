@@ -1,0 +1,4 @@
+.venv
+__pycachce__
+google_credentials.json
+.env
